@@ -1,0 +1,10 @@
+       ID DIVISION.
+       PROGRAM-ID.    TESTCOB.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       COPY TESTMSD.
+       PROCEDURE DIVISION.
+               EXEC KICKS
+                   SEND MAP('TESTMAP') MAPSET('TESTMSD') ERASE
+               END-EXEC.
+               EXEC KICKS RETURN END-EXEC.
