@@ -28,6 +28,6 @@
        FILL-IN-MAP SECTION.
                MOVE LOW-VALUES TO TESTMAPO
                EXEC CICS ASSIGN USERID(MAPA01O) END-EXEC.
-               MOVE 'TEST' TO MAPB01O
+               EXEC CICS
        FILL-IN-MAP-EXIT.
                EXIT.
