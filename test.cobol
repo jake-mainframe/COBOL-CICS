@@ -3,6 +3,7 @@
        ENVIRONMENT DIVISION.
        DATA DIVISION.
        WORKING-STORAGE SECTION.
+       01  USER-ID                           PIC X(6)
        01  ATT                               PIC X(1)
        01  OLD-BALANCE                       PIC 9(3)
        01  SUB-BALANCE                       PIC 9(3)
@@ -26,8 +27,16 @@
                    EXEC CICS
                    RECEIVE MAP('TESTMAP') MAPSET('TESTMSD') NOHANDLE
                    END-EXEC
-                   PERFORM FILL-IN-MAP
-                   MOVE 'TEST' TO MAPD01O
+                   MOVE MAPE01O TO SUB-BALANCE
+                   EXEC CICS ASSIGN USERID(USER-ID) END-EXEC
+                   EXEC CICS
+                   READ FILE('CUSTMAS')
+                        INTO(CUSTOMER-MASTER-RECORD)
+                        RIDFLD(USER-ID)
+                   END-EXEC
+                   MOVE CM-BALANCE TO OLD-BALANCE
+                   COMPUTE NEW-BALANCE = OLD-BALANCE - SUB-BALANCE
+                   MOVE NEW-BALANCE TO MAPB01O
                    EXEC CICS
                    SEND MAP('TESTMAP') MAPSET('TESTMSD') ERASE
                    END-EXEC
@@ -57,14 +66,4 @@
                END-EXEC.
                MOVE CM-BALANCE TO MAPB01O.
        FILL-IN-MAP-EXIT.
-               EXIT.
-       SEND-IN-TRA SECTION.
-               MOVE LOW-VALUES TO TESTMAPO.
-               EXEC CICS
-               READ FILE('CUSTMAS')
-                    INTO(CUSTOMER-MASTER-RECORD)
-                    RIDFLD(MAPA01O)
-               END-EXEC.
-               MOVE CM-BALANCE TO OLD-BALANCE.
-       SEND-IN-TRA-EXIT.
                EXIT.
