@@ -24,12 +24,12 @@
                EXEC CICS
                SEND MAP('TESTMAP') MAPSET('TESTMSD') ERASE
                END-EXEC.
-       RESEND-IT.
-               IF EIBAID = DFHENTER
-                   PERFORM SEND-IN-TRA
-               IF EIBAID NOT = DFHENTER
-                   GO TO RESEND-IT.
-               EXEC CICS RETURN END-EXEC.
+               IF EIBAID = DFHPF12
+                   MOVE CM-BALANCE TO MAPD01O
+               EXEC CICS RETURN
+                   TRANSID(EIBTRNID)
+               END-EXEC.
+
        FILL-IN-MAP SECTION.
                MOVE LOW-VALUES TO TESTMAPO.
                EXEC CICS ASSIGN USERID(MAPA01O) END-EXEC.
@@ -49,8 +49,5 @@
                     RIDFLD(MAPA01O)
                END-EXEC.
                MOVE CM-BALANCE TO OLD-BALANCE.
-               MOVE MAPD01O TO SUB-BALANCE.
-               COMPUTE NEW-BALANCE = OLD-BALANCE - SUB-BALANCE.
-               MOVE NEW-BALANCE TO MAPB01O.
        SEND-IN-TRA-EXIT.
                EXIT.
