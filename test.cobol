@@ -35,16 +35,18 @@
                        TRANSID(EIBTRNID)
                    END-EXEC.
                END-IF
-               EXEC CICS
-               RECEIVE MAP('TESTMAP') MAPSET('TESTMSD') NOHANDLE
-               END-EXEC.
-               PERFORM FILL-IN-MAP.
-               EXEC CICS
-               SEND MAP('TESTMAP') MAPSET('TESTMSD') ERASE
-               END-EXEC.
-               EXEC CICS RETURN
+               IF EIBCALEN = 0 THEN
+                   EXEC CICS
+                   RECEIVE MAP('TESTMAP') MAPSET('TESTMSD') NOHANDLE
+                   END-EXEC
+                   PERFORM FILL-IN-MAP
+                   EXEC CICS
+                   SEND MAP('TESTMAP') MAPSET('TESTMSD') ERASE
+                   END-EXEC
+                   EXEC CICS RETURN
                    TRANSID(EIBTRNID)
-               END-EXEC.
+                   END-EXEC.
+               END-IF
        FILL-IN-MAP SECTION.
                MOVE LOW-VALUES TO TESTMAPO.
                EXEC CICS ASSIGN USERID(MAPA01O) END-EXEC.
