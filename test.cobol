@@ -29,5 +29,10 @@
                MOVE LOW-VALUES TO TESTMAPO
                EXEC CICS ASSIGN USERID(MAPA01O) END-EXEC.
                EXEC CICS
+               READ FILE('CUSTMAS')
+                    INTO(CUSTOMER-MASTER-RECORD)
+                    RIDFLD(MAPA01O)
+               END-EXEC.
+               MOVE CM-BALANCE TO MAPB01O.
        FILL-IN-MAP-EXIT.
                EXIT.
