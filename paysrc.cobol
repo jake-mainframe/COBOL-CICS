@@ -1,5 +1,5 @@
        ID DIVISION.
-       PROGRAM-ID.    TESTCOB.
+       PROGRAM-ID.    PAYMCOB.
        ENVIRONMENT DIVISION.
        DATA DIVISION.
        WORKING-STORAGE SECTION.
@@ -30,25 +30,14 @@
                IF EIBAID = DFHPF12 THEN
                    MOVE DFHCOMMAREA TO WS-COMM
                    EXEC CICS
-                   RECEIVE MAP('TESTMAP') MAPSET('TESTMSD') NOHANDLE
+                   RECEIVE MAP('PAYMMAP') MAPSET('TESTMSD') NOHANDLE
                    END-EXEC
                    MOVE MAPE01O TO SUB-BALANCE
                    MOVE MAPC01O TO TARG-ID
-                   PERFORM BALANCE-REF
-                   COMPUTE CM-BALANCE = CM-BALANCE - SUB-BALANCE
-                   EXEC CICS
-                   REWRITE FILE('CUSTMAS')
-                   FROM(CUSTOMER-MASTER-RECORD)
-                   END-EXEC
-                   PERFORM BALANCE-TAR
-                   COMPUTE TG-BALANCE = TG-BALANCE + SUB-BALANCE
-                   EXEC CICS
-                   REWRITE FILE('CUSTMAS')
-                   FROM(TARGET-MASTER-RECORD)
-                   END-EXEC
+                   PERFORM WRITE-BALAN
                    PERFORM FILL-IN-MAP
                    EXEC CICS
-                   SEND MAP('TESTMAP') MAPSET('TESTMSD') ERASE
+                   SEND MAP('PAYMMAP') MAPSET('TESTMSD') ERASE
                    END-EXEC
                    EXEC CICS RETURN
                        TRANSID(EIBTRNID) COMMAREA(WS-COMM)
@@ -57,13 +46,13 @@
                IF EIBAID = DFHPF5 THEN
                    MOVE DFHCOMMAREA TO WS-COMM
                    EXEC CICS
-                   RECEIVE MAP('TESTMAP') MAPSET('TESTMSD') NOHANDLE
+                   RECEIVE MAP('PAYMMAP') MAPSET('TESTMSD') NOHANDLE
                    END-EXEC
                    MOVE MAPA01O TO USER-ID
                    PERFORM BALANCE-REF
                    PERFORM FILL-IN-MAP
                    EXEC CICS
-                   SEND MAP('TESTMAP') MAPSET('TESTMSD') ERASE
+                   SEND MAP('PAYMMAP') MAPSET('TESTMSD') ERASE
                    END-EXEC
                    EXEC CICS RETURN
                        TRANSID(EIBTRNID) COMMAREA(WS-COMM)
@@ -71,18 +60,31 @@
                END-IF
                IF EIBCALEN = 0 THEN
                    EXEC CICS
-                   RECEIVE MAP('TESTMAP') MAPSET('TESTMSD') NOHANDLE
+                   RECEIVE MAP('PAYMMAP') MAPSET('TESTMSD') NOHANDLE
                    END-EXEC
                    EXEC CICS ASSIGN USERID(USER-ID) END-EXEC
                    PERFORM BALANCE-REF
                    PERFORM FILL-IN-MAP
                    EXEC CICS
-                   SEND MAP('TESTMAP') MAPSET('TESTMSD') ERASE
+                   SEND MAP('PAYMMAP') MAPSET('TESTMSD') ERASE
                    END-EXEC
                    EXEC CICS RETURN
                    TRANSID(EIBTRNID) COMMAREA(WS-COMM)
                    END-EXEC.
                END-IF
+       WRITE-BALAN SECTION.
+               PERFORM BALANCE-REF
+               COMPUTE CM-BALANCE = CM-BALANCE - SUB-BALANCE
+               EXEC CICS
+               REWRITE FILE('CUSTMAS')
+               FROM(CUSTOMER-MASTER-RECORD)
+               END-EXEC
+               PERFORM BALANCE-TAR
+               COMPUTE TG-BALANCE = TG-BALANCE + SUB-BALANCE
+               EXEC CICS
+               REWRITE FILE('CUSTMAS')
+               FROM(TARGET-MASTER-RECORD)
+               END-EXEC
        BALANCE-REF SECTION.
                EXEC CICS
                READ FILE('CUSTMAS')

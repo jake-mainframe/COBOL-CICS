@@ -5,3 +5,5 @@ tell no one
 unprintable characters
 
 non signed
+
+auth bypass, enter trans manually
