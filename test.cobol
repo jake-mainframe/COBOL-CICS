@@ -3,8 +3,8 @@
        ENVIRONMENT DIVISION.
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       01  USER-ID                           PIC X(6)
-       01  ATT                               PIC X(1)
+       01  WS-COMM.
+           05  USER-ID                       PIC X(6)
        01  OLD-BALANCE                       PIC 9(3)
        01  SUB-BALANCE                       PIC 9(3)
        01  NEW-BALANCE                       PIC 9(3)
@@ -19,15 +19,15 @@
        LINKAGE SECTION.
        01  DFHCOMMAREA PIC X(100).
        PROCEDURE DIVISION.
-               MOVE EIBAID TO ATT.
-               IF ATT = DFHCLEAR THEN
+               IF EIBAID = DFHCLEAR THEN
                    EXEC CICS RETURN END-EXEC.
                END-IF
-               IF ATT = DFHPF12 THEN
+               IF EIBAID = DFHPF12 THEN
                    EXEC CICS
                    RECEIVE MAP('TESTMAP') MAPSET('TESTMSD') NOHANDLE
                    END-EXEC
                    MOVE MAPE01O TO SUB-BALANCE
+                   MOVE MAPA01I TO MAPA01O
                    EXEC CICS ASSIGN USERID(USER-ID) END-EXEC
                    EXEC CICS
                    READ FILE('CUSTMAS')
