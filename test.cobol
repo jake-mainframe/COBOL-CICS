@@ -6,13 +6,18 @@
        01  SECRET-MESSAGE                    PIC X(9) VALUE 'TELLNOONE'
        01  WS-COMM.
            05  USER-ID                       PIC X(6)
-           05  OLD-BALANCE                   PIC 9(3)
        01  SUB-BALANCE                       PIC 9(3)
+       01  TARG-ID                           PIC X(6)
       *
        01  CUSTOMER-MASTER-RECORD.
       *
            05  CM-CUSTOMER-NUMBER            PIC X(6).
            05  CM-BALANCE                    PIC 9(3).
+      *
+       01  TARGET-MASTER-RECORD.
+      *
+           05  TG-CUSTOMER-NUMBER            PIC X(6).
+           05  TG-BALANCE                    PIC 9(3).
       *
        COPY TESTMSD.
        COPY DFHAID.
@@ -28,14 +33,19 @@
                    RECEIVE MAP('TESTMAP') MAPSET('TESTMSD') NOHANDLE
                    END-EXEC
                    MOVE MAPE01O TO SUB-BALANCE
-                   MOVE MAPA01I TO MAPA01O
+                   MOVE MAPC01O TO TARG-ID
+                   PERFORM BALANCE-REF
+                   COMPUTE CM-BALANCE = CM-BALANCE - SUB-BALANCE
                    EXEC CICS
-                   READ FILE('CUSTMAS')
-                        INTO(CUSTOMER-MASTER-RECORD)
-                        RIDFLD(USER-ID)
+                   REWRITE FILE('CUSTMAS')
+                   FROM(CUSTOMER-MASTER-RECORD)
                    END-EXEC
-                   MOVE CM-BALANCE TO OLD-BALANCE
-                   COMPUTE OLD-BALANCE = OLD-BALANCE - SUB-BALANCE
+                   PERFORM BALANCE-TAR
+                   COMPUTE TG-BALANCE = TG-BALANCE + SUB-BALANCE
+                   EXEC CICS
+                   REWRITE FILE('CUSTMAS')
+                   FROM(TARGET-MASTER-RECORD)
+                   END-EXEC
                    PERFORM FILL-IN-MAP
                    EXEC CICS
                    SEND MAP('TESTMAP') MAPSET('TESTMSD') ERASE
@@ -50,7 +60,6 @@
                    RECEIVE MAP('TESTMAP') MAPSET('TESTMSD') NOHANDLE
                    END-EXEC
                    MOVE MAPA01O TO USER-ID
-                   DISPLAY USER-ID
                    PERFORM BALANCE-REF
                    PERFORM FILL-IN-MAP
                    EXEC CICS
@@ -79,10 +88,17 @@
                READ FILE('CUSTMAS')
                INTO(CUSTOMER-MASTER-RECORD)
                RIDFLD(USER-ID)
+               UPDATE
                END-EXEC.
-               MOVE CM-BALANCE TO OLD-BALANCE
+       BALANCE-TAR SECTION.
+               EXEC CICS
+               READ FILE('CUSTMAS')
+               INTO(TARGET-MASTER-RECORD)
+               RIDFLD(TARG-ID)
+               UPDATE
+               END-EXEC.
        FILL-IN-MAP SECTION.
                MOVE USER-ID TO MAPA01O
-               MOVE OLD-BALANCE TO MAPB01O.
+               MOVE CM-BALANCE TO MAPB01O.
        FILL-IN-MAP-EXIT.
                EXIT.
