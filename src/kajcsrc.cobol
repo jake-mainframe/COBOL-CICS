@@ -8,6 +8,11 @@
        LINKAGE SECTION.
        01  DFHCOMMAREA PIC X(100).
        PROCEDURE DIVISION.
-               IF EIBAID = DFHCLEAR THEN
-                   EXEC CICS RETURN END-EXEC.
-               END-IF
+           IF EIBAID = DFHCLEAR THEN
+               EXEC CICS RETURN END-EXEC.
+           EXEC CICS
+           SEND MAP('KAJCMAP') MAPSET('TESTMSD') ERASE
+           END-EXEC.
+           EXEC CICS RETURN
+               TRANSID(EIBTRNID)
+           END-EXEC.
