@@ -5,6 +5,7 @@
        WORKING-STORAGE SECTION.
        01  MAINMAP                   PIC X(7) VALUE 'MAINCOB'
        01  PAYMAP                    PIC X(7) VALUE 'PAYMCOB'
+       01  PAYTRAN                   PIC X(4) VALUE 'PAYM'
        01  LISTMAP                   PIC X(7) VALUE 'LISTCOB'
        01  ADMINMAP                  PIC X(7) VALUE 'KAJCCOB'
        01  FLAG                      PIC X(5) VALUE 'FLAG:'
@@ -26,5 +27,5 @@
            SEND MAP('HOMEMAP') MAPSET('TESTMSD') ERASE
            END-EXEC.
            EXEC CICS RETURN
-               TRANSID(EIBTRNID)
+               TRANSID('MAIN')
            END-EXEC.

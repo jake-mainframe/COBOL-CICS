@@ -17,5 +17,5 @@
            SEND MAP('LISTMAP') MAPSET('TESTMSD') ERASE
            END-EXEC.
            EXEC CICS RETURN
-               TRANSID(EIBTRNID)
+               TRANSID('LIST')
            END-EXEC.

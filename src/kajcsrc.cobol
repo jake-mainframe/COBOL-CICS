@@ -17,5 +17,5 @@
            SEND MAP('KAJCMAP') MAPSET('TESTMSD') ERASE
            END-EXEC.
            EXEC CICS RETURN
-               TRANSID(EIBTRNID)
+               TRANSID('KAJC')
            END-EXEC.

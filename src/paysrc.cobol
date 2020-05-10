@@ -43,7 +43,7 @@
                    SEND MAP('PAYMMAP') MAPSET('TESTMSD') ERASE
                    END-EXEC
                    EXEC CICS RETURN
-                       TRANSID(EIBTRNID) COMMAREA(WS-COMM)
+                       TRANSID('PAYM') COMMAREA(WS-COMM)
                    END-EXEC.
                END-IF
                IF EIBAID = DFHPF5 THEN
@@ -58,7 +58,7 @@
                    SEND MAP('PAYMMAP') MAPSET('TESTMSD') ERASE
                    END-EXEC
                    EXEC CICS RETURN
-                       TRANSID(EIBTRNID) COMMAREA(WS-COMM)
+                       TRANSID('PAYM') COMMAREA(WS-COMM)
                    END-EXEC.
                END-IF
                EXEC CICS ASSIGN USERID(USER-ID) END-EXEC
@@ -68,7 +68,7 @@
                SEND MAP('PAYMMAP') MAPSET('TESTMSD') ERASE
                END-EXEC
                EXEC CICS RETURN
-               TRANSID(EIBTRNID) COMMAREA(WS-COMM)
+               TRANSID('PAYM') COMMAREA(WS-COMM)
                END-EXEC.
        WRITE-BALAN SECTION.
                PERFORM BALANCE-REF
