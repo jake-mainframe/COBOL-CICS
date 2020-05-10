@@ -1,6 +1,6 @@
 I:
 Have a hacked x3270 client
-x3270 to 192.168.22.100
+run "x3270 192.168.22.100 3270"
 You should be at a login screen if not press clear
 Username: HERC03
 Password: PASS4U
