@@ -63,6 +63,8 @@
                END-IF
                EXEC CICS ASSIGN USERID(USER-ID) END-EXEC
                PERFORM BALANCE-REF
+               IF CM-BALANCE = 999 THEN
+                  MOVE 'FLAG:RICHAF' TO MAPF01O.
                PERFORM FILL-IN-MAP
                EXEC CICS
                SEND MAP('PAYMMAP') MAPSET('TESTMSD') ERASE

@@ -1,9 +1,29 @@
-change id
+I:
+Have a hacked x3270 client
+x3270 to 192.168.22.100
+You should be at a login screen if not press clear
+Username: HERC03
+Password: PASS4U
+At the Main Menu enter K
+Press clear to clear welcome message
+Enter MAIN to start Bazarre Bank
 
-tell no one
+Q:Have 999 balance, flag should appear (you will need to go to main menu and back again)
+A:RICHAF
+H:Non Signed Ints have wierd subtraction
+H:3-8=5?
 
-unprintable characters
+Q:How much balance does user HERC02 have.
+A:234
+H:Protected fields offer little protection
+H:PF5 throws a abend on the pay transaction, i wonder what its trying to do?
 
-non signed
+Q:There is a secret flag hidden in working storage what is it
+A:TELLNOONE
+H:CICS(and KICKS) have default transactions
+H:CEDF(KEDF) is a debugger
+H:PF12 to read working storage of running transaction
 
-auth bypass, enter trans manually
+Q:There is a admin transaction, what is its 4 letter transaction
+A:KAJC
+H:Working storage on main transaction should give you a clue
