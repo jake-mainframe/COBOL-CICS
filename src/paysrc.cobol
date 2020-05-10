@@ -58,20 +58,15 @@
                        TRANSID(EIBTRNID) COMMAREA(WS-COMM)
                    END-EXEC.
                END-IF
-               IF EIBCALEN = 0 THEN
-                   EXEC CICS
-                   RECEIVE MAP('PAYMMAP') MAPSET('TESTMSD') NOHANDLE
-                   END-EXEC
-                   EXEC CICS ASSIGN USERID(USER-ID) END-EXEC
-                   PERFORM BALANCE-REF
-                   PERFORM FILL-IN-MAP
-                   EXEC CICS
-                   SEND MAP('PAYMMAP') MAPSET('TESTMSD') ERASE
-                   END-EXEC
-                   EXEC CICS RETURN
-                   TRANSID(EIBTRNID) COMMAREA(WS-COMM)
-                   END-EXEC.
-               END-IF
+               EXEC CICS ASSIGN USERID(USER-ID) END-EXEC
+               PERFORM BALANCE-REF
+               PERFORM FILL-IN-MAP
+               EXEC CICS
+               SEND MAP('PAYMMAP') MAPSET('TESTMSD') ERASE
+               END-EXEC
+               EXEC CICS RETURN
+               TRANSID(EIBTRNID) COMMAREA(WS-COMM)
+               END-EXEC.
        WRITE-BALAN SECTION.
                PERFORM BALANCE-REF
                COMPUTE CM-BALANCE = CM-BALANCE - SUB-BALANCE

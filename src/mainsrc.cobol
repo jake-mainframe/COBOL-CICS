@@ -3,9 +3,27 @@
        ENVIRONMENT DIVISION.
        DATA DIVISION.
        WORKING-STORAGE SECTION.
+       01  PAYMAP                    PIC X(4) VALUE 'PAYM'
+       01  LISTMAP                   PIC X(4) VALUE 'LIST'
+       01  ADMINMAP                  PIC X(4) VALUE 'KAJC'
+       01  FLAG                      PIC X(5) VALUE 'FLAG:'
+       01  FLAG-ANSWER               PIC X(9) VALUE 'TELLNOONE'
        COPY TESTMSD.
        COPY DFHAID.
        LINKAGE SECTION.
        01  DFHCOMMAREA PIC X(100).
        PROCEDURE DIVISION.
+           IF EIBAID = DFHCLEAR THEN
                EXEC CICS RETURN END-EXEC.
+           IF EIBAID = DFHPF3 THEN
+               EXEC CICS RETURN TRANSID(PAYMAP) END-EXEC.
+           IF EIBAID = DFHPF4 THEN
+               EXEC CICS RETURN TRANSID(LISTMAP) END-EXEC.
+           IF EIBAID = DFHPF5 THEN
+               EXEC CICS RETURN TRANSID(ADMINMAP) END-EXEC.
+           EXEC CICS
+           SEND MAP('HOMEMAP') MAPSET('TESTMSD') ERASE
+           END-EXEC.
+           EXEC CICS RETURN
+               TRANSID(EIBTRNID)
+           END-EXEC.
