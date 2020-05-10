@@ -8,6 +8,7 @@
            05  USER-ID                       PIC X(6)
        01  SUB-BALANCE                       PIC 9(3)
        01  TARG-ID                           PIC X(6)
+       01  MAINMAP                   PIC X(7) VALUE 'MAINCOB'
       *
        01  CUSTOMER-MASTER-RECORD.
       *
@@ -27,6 +28,8 @@
                IF EIBAID = DFHCLEAR THEN
                    EXEC CICS RETURN END-EXEC.
                END-IF
+               IF EIBAID = DFHPF2 THEN
+                   EXEC CICS XCTL PROGRAM(MAINMAP) END-EXEC.
                IF EIBAID = DFHPF12 THEN
                    MOVE DFHCOMMAREA TO WS-COMM
                    EXEC CICS
